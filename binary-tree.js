@@ -117,6 +117,33 @@ class BinaryTree {
       queue.shift();
     }
   }
+  inOrder(callback, node = this.root) {
+    //left->root->right
+    if (node === null) {
+      return;
+    }
+    this.inOrder(callback, node.left);
+    callback(node);
+    this.inOrder(callback, node.right);
+  }
+  preOrder(callback, node = this.root) {
+    //root -> left -> right
+    if (node === null) {
+      return;
+    }
+    callback(node);
+    this.preOrder(callback, node.left);
+    this.preOrder(callback, node.right);
+  }
+  postOrder(callback, node = this.root) {
+    //left -> right -> root
+    if (node === null) {
+      return;
+    }
+    this.postOrder(callback, node.left);
+    this.postOrder(callback, node.right);
+    callback(node);
+  }
   prettyPrint(node, prefix = "", isLeft = true) {
     if (node === null) {
       return;
@@ -140,4 +167,4 @@ tree.prettyPrint(tree.root);
 function callback(node) {
   console.log(node.data);
 }
-tree.levelOrder(callback);
+tree.postOrder(callback);
