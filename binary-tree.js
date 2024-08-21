@@ -89,6 +89,34 @@ class BinaryTree {
     }
     return successor;
   }
+  find(value, node = this.root) {
+    if (node === null) {
+      return node;
+    }
+    if (value > node.data) {
+      return this.find(value, node.right);
+    }
+    if (value < node.data) {
+      return this.find(value, node.left);
+    }
+    if (value === node.data) {
+      return node;
+    }
+  }
+  levelOrder(callback) {
+    let queue = [];
+    queue.push(this.root);
+    while (queue.length !== 0) {
+      if (queue[0].left !== null) {
+        queue.push(queue[0].left);
+      }
+      if (queue[0].right !== null) {
+        queue.push(queue[0].right);
+      }
+      callback(queue[0]);
+      queue.shift();
+    }
+  }
   prettyPrint(node, prefix = "", isLeft = true) {
     if (node === null) {
       return;
@@ -108,3 +136,8 @@ class BinaryTree {
 }
 let tree = new BinaryTree([1, 23, 8, 4, 3, 5, 7, 9, 67, 120, 6345, 324]);
 tree.prettyPrint(tree.root);
+//tree.prettyPrint(tree.find(324));
+function callback(node) {
+  console.log(node.data);
+}
+tree.levelOrder(callback);
