@@ -144,6 +144,55 @@ class BinaryTree {
     this.postOrder(callback, node.right);
     callback(node);
   }
+  height(node) {
+    if (node === null) {
+      return -1;
+    }
+    if (this.height(node.right) > this.height(node.left)) {
+      return this.height(node.right) + 1;
+    } else {
+      return this.height(node.left) + 1;
+    }
+  }
+  depth(value, node = this.root) {
+    if (node === null) {
+      throw Error("Node not found");
+    }
+    if (value > node.data) {
+      return this.depth(value, node.right) + 1;
+    }
+    if (value < node.data) {
+      return this.depth(value, node.left) + 1;
+    }
+    if (value === node.data) {
+      return 0;
+    }
+  }
+  isBalanced() {
+    return this.checkBalance() !== -1;
+  }
+  checkBalance(node = this.root) {
+    if (node === null) {
+      return 0;
+    }
+    const leftHeight = this.checkBalance(node.left);
+    const rightHeight = this.checkBalance(node.right);
+    if (leftHeight === -1 || rightHeight === -1) {
+      return -1;
+    }
+    if (Math.abs(leftHeight - rightHeight) > 1) {
+      return -1;
+    }
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+  rebalance() {
+    const newArray = [];
+    const callback = function (node) {
+      newArray.push(node.data);
+    };
+    this.inOrder(callback);
+    this.root = this.buildTree(newArray, 0, newArray.length - 1);
+  }
   prettyPrint(node, prefix = "", isLeft = true) {
     if (node === null) {
       return;
@@ -162,9 +211,16 @@ class BinaryTree {
   }
 }
 let tree = new BinaryTree([1, 23, 8, 4, 3, 5, 7, 9, 67, 120, 6345, 324]);
+tree.insert(455);
+tree.insert(2300);
+tree.insert(4029);
+tree.insert(5939);
 tree.prettyPrint(tree.root);
 //tree.prettyPrint(tree.find(324));
-function callback(node) {
+/*function callback(node) {
   console.log(node.data);
 }
-tree.postOrder(callback);
+tree.postOrder(callback);*/
+console.log(tree.isBalanced());
+tree.rebalance();
+tree.prettyPrint(tree.root);
